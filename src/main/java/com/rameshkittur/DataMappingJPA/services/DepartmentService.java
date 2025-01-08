@@ -37,4 +37,27 @@ public class DepartmentService {
             return departmentRepository.save(department);
         })).orElse(null);
     }
+
+    public EmployeeEntity addEmployeeToDepartment(Long departmentId, Long employeeId) {
+        Optional<DepartmentEntity> departmentEntity = departmentRepository.findById(departmentId);
+        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
+
+        return departmentEntity.flatMap(department ->
+                employeeEntity.map(employee -> {
+                    employee.setWorkerDepartment(department);
+                    return employeeRepository.save(employee);
+                })).orElse(null);
+
+    }
+
+    public EmployeeEntity addFreelancersToDepartment(Long departmentId, Long employeeId) {
+        Optional<DepartmentEntity> departmentEntity = departmentRepository.findById(departmentId);
+        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
+
+        return departmentEntity.flatMap(department ->
+                employeeEntity.map(employee -> {
+                    employee.getFreelanceDepartments().add(department);
+                    return employeeRepository.save(employee);
+                })).orElse(null);
+    }
 }
